@@ -13,23 +13,27 @@ public class GameScreen implements Screen {
     private Rectangle snakeHeadRectangle;
     private MyGame game;
     private OrthographicCamera camera;
+    private boolean death=false;
 
     public GameScreen(MyGame gam) {
         game = gam;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-        snake = new Array<>();
+       /* snake = new Array<>();
         snakeHeadRectangle = new Rectangle();
         snakeHeadRectangle.x = 800 / 2 - 64 / 2; // center the bucket horizontally
         snakeHeadRectangle.y = 20; // bottom left corner of the bucket is 20 pixels above
         snakeHeadRectangle.width = 64;
-        snakeHeadRectangle.height = 64;
+        snakeHeadRectangle.height = 64;*/
         AssetsLoader.loadGameAssets();
     }
 
     @Override
     public void show() {
-AssetsLoader.gameMusic.play();
+        AssetsLoader.gameMusic.play();
+        float vol=AssetsLoader.gameMusic.getVolume();
+        AssetsLoader.startGame.play();
+
     }
 
     @Override
@@ -44,8 +48,17 @@ AssetsLoader.gameMusic.play();
         // coordinate system specified by the camera.
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.batch.draw(AssetsLoader.snakeHead, snakeHeadRectangle.x, snakeHeadRectangle.y);
+        game.batch.draw(AssetsLoader.region2,0,0);
+       // game.batch.draw(AssetsLoader.snakeHead, snakeHeadRectangle.x, snakeHeadRectangle.y);
         game.batch.end();
+       /* if (death){
+            game.setScreen(new EndGameScreen(game));
+            dispose();
+        }*/
+        if (Gdx.input.justTouched()) {
+            game.setScreen(new EndGameScreen(game));
+            dispose();
+        }
     }
 
     @Override
@@ -70,8 +83,11 @@ AssetsLoader.gameMusic.play();
 
     @Override
     public void dispose() {
-        AssetsLoader.snakeHead.dispose();
+        //AssetsLoader.snakeHead.dispose();
+        AssetsLoader.backgroundImage2.dispose();
         AssetsLoader.gameMusic.dispose();
+        AssetsLoader.startGame.dispose();
+
 
     }
 }

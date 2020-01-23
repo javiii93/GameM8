@@ -5,46 +5,43 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-import java.awt.Button;
 
-public class MainMenuScreen implements Screen{
-    final MyGame game;
-   private OrthographicCamera camera;
-    private Button b1;
+public class EndGameScreen implements Screen {
+    private MyGame game;
+    private OrthographicCamera camera;
 
-    public MainMenuScreen(final MyGame gam) {
+    public EndGameScreen(final MyGame gam) {
         game = gam;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-        AssetsLoader.loadMainMenu();
-        b1=new Button("button");
+        AssetsLoader.loadEndAssets();
+
+
     }
+
 
     @Override
     public void show() {
-        AssetsLoader.mainMusic.play();
-
+        AssetsLoader.endGame.play();
+        AssetsLoader.endMusic.play();
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // tell the camera to update its matrices.
         camera.update();
+
+        // tell the SpriteBatch to render in the
+        // coordinate system specified by the camera.
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.batch.draw(AssetsLoader.region,0,0);
-
-        game.font.draw(game.batch, "Javiii93!!! ", 100, 150);
-        game.font.draw(game.batch, "Toca la pantalla para empezar!", 100, 100);
-
+        game.batch.draw(AssetsLoader.region1,0,0);
         game.batch.end();
 
-        if (Gdx.input.justTouched()) {
-        game.setScreen(new GameScreen(game));
-            dispose();
-        }
+
     }
 
     @Override
@@ -69,7 +66,8 @@ public class MainMenuScreen implements Screen{
 
     @Override
     public void dispose() {
-AssetsLoader.backgroundImage.dispose();
-AssetsLoader.mainMusic.dispose();
+        AssetsLoader.endGame.dispose();
+        AssetsLoader.endMusic.dispose();
+        AssetsLoader.backgroundImage1.dispose();
     }
 }
