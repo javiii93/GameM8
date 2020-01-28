@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -25,7 +26,8 @@ public class AssetsLoader {
     public static Music gameMusic;
     public static Music endMusic;
     public static TextureAtlas atlas;
-    public static Sprite spriteHead;
+    public static Texture ideSheet;
+    public static Animation<TextureRegion> ideAnimation;
 
 
     public AssetsLoader() {
@@ -38,12 +40,22 @@ public class AssetsLoader {
         gameMusic=Gdx.audio.newMusic(Gdx.files.internal("Music\\funnyMusic.mp3"));
         startGame=Gdx.audio.newSound(Gdx.files.internal("Sounds\\cortina.mp3"));
         gameMusic.setLooping(true);
-
-        atlas = new TextureAtlas(Gdx.files.internal("Animations\\head.atlas"));
-        //TextureAtlas.AtlasRegion region = atlas.findRegion("imagename");
-       spriteHead = atlas.createSprite("headMove");
-       // NinePatch patch = atlas.createPatch("patchimagename");
+        atlas = new TextureAtlas(Gdx.files.internal("Animations\\ide.atlas"));
+        ideAnimation = new Animation<TextureRegion>(0.1f, atlas.findRegions("ide"), Animation.PlayMode.LOOP);
+        ideSheet = new Texture(Gdx.files.internal("Animations\\ide.png"));
+        TextureRegion[][] tmp = TextureRegion.split(ideSheet,
+                ideSheet.getWidth() / 3,
+                ideSheet.getHeight() / 4);
+        TextureRegion[] ideFrames = new TextureRegion[3 * 4];
+        int index = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 3; j++) {
+                ideFrames[index++] = tmp[i][j];
+            }
+        }
+        ideAnimation = new Animation<TextureRegion>(0.1f, ideFrames);
     }
+
     public static void loadMainMenu(){
 
         backgroundImage=new Texture(Gdx.files.internal("Backgrounds\\backGroundMain.png"));
