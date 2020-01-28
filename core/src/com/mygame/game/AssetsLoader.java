@@ -40,16 +40,16 @@ public class AssetsLoader {
         gameMusic=Gdx.audio.newMusic(Gdx.files.internal("Music\\funnyMusic.mp3"));
         startGame=Gdx.audio.newSound(Gdx.files.internal("Sounds\\cortina.mp3"));
         gameMusic.setLooping(true);
-        atlas = new TextureAtlas(Gdx.files.internal("Animations\\ide.atlas"));
+        atlas = new TextureAtlas(Gdx.files.internal("Animations\\dino.atlas"));
         ideAnimation = new Animation<TextureRegion>(0.1f, atlas.findRegions("ide"), Animation.PlayMode.LOOP);
-        ideSheet = new Texture(Gdx.files.internal("Animations\\ide.png"));
+        ideSheet = new Texture(Gdx.files.internal("Animations\\dino.png"));
         TextureRegion[][] tmp = TextureRegion.split(ideSheet,
-                ideSheet.getWidth() / 3,
-                ideSheet.getHeight() / 4);
-        TextureRegion[] ideFrames = new TextureRegion[3 * 4];
+                ideSheet.getWidth() / 7,
+                ideSheet.getHeight() / 7);
+        TextureRegion[] ideFrames = new TextureRegion[7 * 7];
         int index = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
                 ideFrames[index++] = tmp[i][j];
             }
         }
