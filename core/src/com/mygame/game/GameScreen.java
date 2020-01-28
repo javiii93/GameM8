@@ -13,7 +13,7 @@ public class GameScreen implements Screen {
     private Rectangle snakeHeadRectangle;
     private MyGame game;
     private OrthographicCamera camera;
-    private boolean death=false;
+    private boolean death = false;
 
     public GameScreen(MyGame gam) {
         game = gam;
@@ -26,12 +26,13 @@ public class GameScreen implements Screen {
         snakeHeadRectangle.width = 64;
         snakeHeadRectangle.height = 64;*/
         AssetsLoader.loadGameAssets();
+        AssetsLoader.spriteHead.setPosition(50,50);
     }
 
     @Override
     public void show() {
         AssetsLoader.gameMusic.play();
-        float vol=AssetsLoader.gameMusic.getVolume();
+        float vol = AssetsLoader.gameMusic.getVolume();
         AssetsLoader.startGame.play();
 
     }
@@ -48,8 +49,10 @@ public class GameScreen implements Screen {
         // coordinate system specified by the camera.
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.batch.draw(AssetsLoader.region2,0,0);
-       // game.batch.draw(AssetsLoader.snakeHead, snakeHeadRectangle.x, snakeHeadRectangle.y);
+
+        game.batch.draw(AssetsLoader.region2, 0, 0);
+        // game.batch.draw(AssetsLoader.snakeHead, snakeHeadRectangle.x, snakeHeadRectangle.y);
+
         game.batch.end();
        /* if (death){
             game.setScreen(new EndGameScreen(game));
@@ -87,7 +90,7 @@ public class GameScreen implements Screen {
         AssetsLoader.backgroundImage2.dispose();
         AssetsLoader.gameMusic.dispose();
         AssetsLoader.startGame.dispose();
-
+AssetsLoader.atlas.dispose();
 
     }
 }

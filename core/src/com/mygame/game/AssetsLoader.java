@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AssetsLoader {
@@ -21,6 +24,9 @@ public class AssetsLoader {
     public static Music mainMusic;
     public static Music gameMusic;
     public static Music endMusic;
+    public static TextureAtlas atlas;
+    public static Sprite spriteHead;
+
 
     public AssetsLoader() {
 
@@ -32,6 +38,11 @@ public class AssetsLoader {
         gameMusic=Gdx.audio.newMusic(Gdx.files.internal("Music\\funnyMusic.mp3"));
         startGame=Gdx.audio.newSound(Gdx.files.internal("Sounds\\cortina.mp3"));
         gameMusic.setLooping(true);
+
+        atlas = new TextureAtlas(Gdx.files.internal("Animations\\head.atlas"));
+        //TextureAtlas.AtlasRegion region = atlas.findRegion("imagename");
+       spriteHead = atlas.createSprite("headMove");
+       // NinePatch patch = atlas.createPatch("patchimagename");
     }
     public static void loadMainMenu(){
 
