@@ -34,6 +34,7 @@ public class AssetsLoader {
 
     }
     public static void loadGameAssets(){
+        int col=12, rows=4;
         //snakeHead=new Texture(Gdx.files.internal("SnakeHead.jpg"));
         backgroundImage2=new Texture(Gdx.files.internal("Backgrounds\\backGroundGame.png"));
         region2  = new TextureRegion(backgroundImage2, 0, 0, 800, 480);
@@ -41,15 +42,15 @@ public class AssetsLoader {
         startGame=Gdx.audio.newSound(Gdx.files.internal("Sounds\\cortina.mp3"));
         gameMusic.setLooping(true);
         atlas = new TextureAtlas(Gdx.files.internal("Animations\\dino.atlas"));
-        ideAnimation = new Animation<TextureRegion>(0.1f, atlas.findRegions("ide"), Animation.PlayMode.LOOP);
+        ideAnimation = new Animation<TextureRegion>(0.8f, atlas.findRegions("Dead"), Animation.PlayMode.LOOP);
         ideSheet = new Texture(Gdx.files.internal("Animations\\dino.png"));
         TextureRegion[][] tmp = TextureRegion.split(ideSheet,
-                ideSheet.getWidth() / 7,
-                ideSheet.getHeight() / 7);
-        TextureRegion[] ideFrames = new TextureRegion[7 * 7];
+                ideSheet.getWidth() / col,
+                ideSheet.getHeight() / rows);
+        TextureRegion[] ideFrames = new TextureRegion[col * rows];
         int index = 0;
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < col; j++) {
                 ideFrames[index++] = tmp[i][j];
             }
         }

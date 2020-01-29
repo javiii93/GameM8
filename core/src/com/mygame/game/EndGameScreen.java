@@ -22,7 +22,7 @@ public class EndGameScreen implements Screen {
 
     @Override
     public void show() {
-        AssetsLoader.endGame.play();
+       // AssetsLoader.endGame.play();
         AssetsLoader.endMusic.play();
     }
 
