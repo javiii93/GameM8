@@ -36,14 +36,14 @@ public class AssetsLoader {
     public static void loadGameAssets(){
         int col=12, rows=4;
         //snakeHead=new Texture(Gdx.files.internal("SnakeHead.jpg"));
-        backgroundImage2=new Texture(Gdx.files.internal("Backgrounds\\backGroundGame.png"));
-        region2  = new TextureRegion(backgroundImage2, 0, 0, 800, 480);
+       // backgroundImage2=new Texture(Gdx.files.internal("Backgrounds\\backGroundGame.png"));
+       // region2  = new TextureRegion(backgroundImage2, 0, 0, 800, 480);
         gameMusic=Gdx.audio.newMusic(Gdx.files.internal("Music\\funnyMusic.mp3"));
         startGame=Gdx.audio.newSound(Gdx.files.internal("Sounds\\cortina.mp3"));
         gameMusic.setLooping(true);
         atlas = new TextureAtlas(Gdx.files.internal("Animations\\dino.atlas"));
-        ideAnimation = new Animation<TextureRegion>(0.8f, atlas.findRegions("Dead"), Animation.PlayMode.LOOP);
-        ideSheet = new Texture(Gdx.files.internal("Animations\\dino.png"));
+        ideAnimation = new Animation<TextureRegion>(0.1f, atlas.findRegions("Idle"), Animation.PlayMode.LOOP);
+        /*ideSheet = new Texture(Gdx.files.internal("Animations\\dino.png"));
         TextureRegion[][] tmp = TextureRegion.split(ideSheet,
                 ideSheet.getWidth() / col,
                 ideSheet.getHeight() / rows);
@@ -54,7 +54,7 @@ public class AssetsLoader {
                 ideFrames[index++] = tmp[i][j];
             }
         }
-        ideAnimation = new Animation<TextureRegion>(0.1f, ideFrames);
+        ideAnimation = new Animation<TextureRegion>(0.1f, ideFrames);*/
     }
 
     public static void loadMainMenu(){
