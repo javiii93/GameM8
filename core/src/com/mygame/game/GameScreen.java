@@ -6,8 +6,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+
+import java.util.Iterator;
 
 
 public class GameScreen implements Screen {
@@ -16,7 +20,9 @@ public class GameScreen implements Screen {
     private MyGame game;
     private OrthographicCamera camera;
     private float stateTime;
-    private boolean death = false, left = false, right = false, idle = true, isWalking = false;
+    private boolean death = false, left = false, right = false, idle = true, isWalking = false, running = false;
+    private Array<Rectangle> rocks;
+    private long lastRockTime;
 
     public GameScreen(MyGame gam) {
         game = gam;
@@ -33,9 +39,19 @@ public class GameScreen implements Screen {
         dino.y = 20;
 
         AssetsLoader.loadGameAssets();
+        rocks = new Array<>();
+        spawnRocksThrow();
         stateTime = 0f;
     }
-
+    private void spawnRocksThrow() {
+        Rectangle rock = new Rectangle();
+        rock.x = MathUtils.random(0, 800 - 64);
+        rock.y = 480;
+        rock.width = 20;
+        rock.height = 20;
+        rocks.add(rock);
+        lastRockTime = TimeUtils.nanoTime();
+    }
     @Override
     public void show() {
         AssetsLoader.gameMusic.play();
@@ -46,7 +62,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClearColor(0, 100, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
 
@@ -58,17 +74,24 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
         TextureRegion currentFrame = AssetsLoader.ideAnimation.getKeyFrame(stateTime, true);
         TextureRegion currentFrameWalking = AssetsLoader.walkingAnimation.getKeyFrame(stateTime, true);
+        TextureRegion currentFrameRunning = AssetsLoader.runningAnimation.getKeyFrame(stateTime, true);
         game.batch.begin();
+        game.batch.draw(AssetsLoader.region2,0,0);
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             isWalking = true;
         } else {
             isWalking = false;
         }
         if (left) {
-            if (isWalking) {
+            if (isWalking && !running) {
                 currentFrameWalking.flip(true, false);
                 game.batch.draw(currentFrameWalking, dino.x, dino.y, 0.5f * currentFrameWalking.getRegionWidth(), 0.5f * currentFrameWalking.getRegionHeight());
                 currentFrameWalking.flip(true, false);
+            } else if (running) {
+                currentFrameRunning.flip(true, false);
+                game.batch.draw(currentFrameRunning, dino.x, dino.y, 0.5f * currentFrameRunning.getRegionWidth(), 0.5f * currentFrameRunning.getRegionHeight());
+                currentFrameRunning.flip(true, false);
+
             } else {
                 currentFrame.flip(true, false);
                 game.batch.draw(currentFrame, dino.x, dino.y, 0.5f * currentFrame.getRegionWidth(), 0.5f * currentFrame.getRegionHeight());
@@ -76,38 +99,63 @@ public class GameScreen implements Screen {
             }
 
         } else if ((right) || (right == false && left == false && idle)) {
-            if (isWalking) {
+            if (isWalking && !running) {
                 game.batch.draw(currentFrameWalking, dino.x, dino.y, 0.5f * currentFrameWalking.getRegionWidth(), 0.5f * currentFrameWalking.getRegionHeight());
+            } else if (running) {
+                game.batch.draw(currentFrameRunning, dino.x, dino.y, 0.5f * currentFrameRunning.getRegionWidth(), 0.5f * currentFrameRunning.getRegionHeight());
             } else {
                 game.batch.draw(currentFrame, dino.x, dino.y, 0.5f * currentFrame.getRegionWidth(), 0.5f * currentFrame.getRegionHeight());
             }
 
         }
+        for (Rectangle rock : rocks) {
+            game.batch.draw(AssetsLoader.rock, rock.x, rock.y,20,20);
+        }
 
         game.batch.end();
+
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             dino.x -= 200 * Gdx.graphics.getDeltaTime();
             left = true;
             right = false;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            dino.y -= 200 * Gdx.graphics.getDeltaTime();
-            
+            running = false;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             dino.x += 200 * Gdx.graphics.getDeltaTime();
             left = false;
             right = true;
+            running = false;
 
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            dino.x -= 400 * Gdx.graphics.getDeltaTime();
+            left = true;
+            right = false;
+            running = true;
+            isWalking = false;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            dino.x += 400 * Gdx.graphics.getDeltaTime();
+            left = false;
+            right = true;
+            running = true;
+            isWalking = false;
+
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            dino.y -= 200 * Gdx.graphics.getDeltaTime();
+
+        }
+
+        if (/* ||*/ Gdx.input.isKeyPressed(Input.Keys.UP)) {
             dino.y += 200 * Gdx.graphics.getDeltaTime();
 
         }
         if (!Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             idle = true;
             isWalking = false;
+            running=false;
 
         } else {
             idle = false;
@@ -119,14 +167,43 @@ public class GameScreen implements Screen {
             dino.x = 0;
 
         }
+        if (dino.y < 0) {
+            dino.y = 0;
+
+        }
         if (dino.x > 800 - 64) {
             dino.x = 800 - 64;
         }
-
+        if (dino.y> 480 - 64) {
+            dino.y = 480 - 64;
+        }
+        //System.out.println("y= "+dino.y+" , x= "+dino.x);
         if (Gdx.input.justTouched() && death) {
             game.setScreen(new EndGameScreen(game));
             dispose();
         }
+        if (TimeUtils.nanoTime() - lastRockTime > 1000000000){
+            spawnRocksThrow();
+
+        }
+        Iterator<Rectangle> iter = rocks.iterator();
+        while (iter.hasNext()) {
+            Rectangle rock = iter.next();
+            rock.y -= 200 * Gdx.graphics.getDeltaTime();
+
+            if (rock.y + 64 < 0) {
+
+                iter.remove();
+                System.out.println("rock remove");
+            }
+            if (rock.overlaps(dino)) {
+
+               System.out.println("Loser");
+                iter.remove();
+
+            }
+            }
+
     }
 
     @Override
@@ -152,10 +229,11 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         //AssetsLoader.snakeHead.dispose();
-        // AssetsLoader.backgroundImage2.dispose();
+        AssetsLoader.backgroundImage2.dispose();
         AssetsLoader.gameMusic.dispose();
         AssetsLoader.startGame.dispose();
         AssetsLoader.atlas.dispose();
         AssetsLoader.ideSheet.dispose();
+        AssetsLoader.rock.dispose();
     }
 }

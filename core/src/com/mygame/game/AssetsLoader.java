@@ -17,7 +17,7 @@ public class AssetsLoader {
     public static Texture backgroundImage;
     public static Texture backgroundImage1;
     public static Texture backgroundImage2;
-    public static Texture snakeHead;
+    public static Texture rock;
     public static Sound snakeEats;
     public static Sound snakeDies;
     public static Sound startGame;
@@ -29,6 +29,7 @@ public class AssetsLoader {
     public static Texture ideSheet;
     public static Animation<TextureRegion> ideAnimation;
     public static Animation<TextureRegion> walkingAnimation;
+    public static Animation<TextureRegion> runningAnimation;
 
 
     public AssetsLoader() {
@@ -37,14 +38,16 @@ public class AssetsLoader {
     public static void loadGameAssets(){
         int col=12, rows=4;
         //snakeHead=new Texture(Gdx.files.internal("SnakeHead.jpg"));
-       // backgroundImage2=new Texture(Gdx.files.internal("Backgrounds\\backGroundGame.png"));
-       // region2  = new TextureRegion(backgroundImage2, 0, 0, 800, 480);
+        rock=new Texture(Gdx.files.internal("Character\\rock.png"));
+       backgroundImage2=new Texture(Gdx.files.internal("Backgrounds\\backGroundMain1.png"));
+       region2  = new TextureRegion(backgroundImage2, 0, 0, 800, 480);
         gameMusic=Gdx.audio.newMusic(Gdx.files.internal("Music\\funnyMusic.mp3"));
         startGame=Gdx.audio.newSound(Gdx.files.internal("Sounds\\cortina.mp3"));
         gameMusic.setLooping(true);
         atlas = new TextureAtlas(Gdx.files.internal("Animations\\dino.atlas"));
         ideAnimation = new Animation<TextureRegion>(0.1f, atlas.findRegions("Idle"), Animation.PlayMode.LOOP);
         walkingAnimation= new Animation<TextureRegion>(0.1f, atlas.findRegions("Walk"), Animation.PlayMode.LOOP);
+        runningAnimation= new Animation<TextureRegion>(0.1f, atlas.findRegions("Run"), Animation.PlayMode.LOOP);
         /*ideSheet = new Texture(Gdx.files.internal("Animations\\dino.png"));
         TextureRegion[][] tmp = TextureRegion.split(ideSheet,
                 ideSheet.getWidth() / col,
