@@ -28,6 +28,7 @@ public class AssetsLoader {
     public static TextureAtlas atlas;
     public static Texture ideSheet;
     public static Animation<TextureRegion> ideAnimation;
+    public static Animation<TextureRegion> walkingAnimation;
 
 
     public AssetsLoader() {
@@ -43,6 +44,7 @@ public class AssetsLoader {
         gameMusic.setLooping(true);
         atlas = new TextureAtlas(Gdx.files.internal("Animations\\dino.atlas"));
         ideAnimation = new Animation<TextureRegion>(0.1f, atlas.findRegions("Idle"), Animation.PlayMode.LOOP);
+        walkingAnimation= new Animation<TextureRegion>(0.1f, atlas.findRegions("Walk"), Animation.PlayMode.LOOP);
         /*ideSheet = new Texture(Gdx.files.internal("Animations\\dino.png"));
         TextureRegion[][] tmp = TextureRegion.split(ideSheet,
                 ideSheet.getWidth() / col,

@@ -1,6 +1,7 @@
 package com.mygame.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +16,7 @@ public class GameScreen implements Screen {
     private MyGame game;
     private OrthographicCamera camera;
     private float stateTime;
-    private boolean death = false, left = false, right = false, idle = true;
+    private boolean death = false, left = false, right = false, idle = true, isWalking = false;
 
     public GameScreen(MyGame gam) {
         game = gam;
@@ -30,9 +31,6 @@ public class GameScreen implements Screen {
         dino = new Rectangle();
         dino.x = 800 / 2 - 64 / 2;
         dino.y = 20;
-        dino.width = 64;
-
-        dino.height = 64;
 
         AssetsLoader.loadGameAssets();
         stateTime = 0f;
@@ -59,31 +57,72 @@ public class GameScreen implements Screen {
         // coordinate system specified by the camera.
         game.batch.setProjectionMatrix(camera.combined);
         TextureRegion currentFrame = AssetsLoader.ideAnimation.getKeyFrame(stateTime, true);
+        TextureRegion currentFrameWalking = AssetsLoader.walkingAnimation.getKeyFrame(stateTime, true);
         game.batch.begin();
-        //
-        if (idle && left) {
-            currentFrame.flip(true, false);
-            game.batch.draw(currentFrame, 400, 240, 0.5f * currentFrame.getRegionWidth(), 0.5f * currentFrame.getRegionHeight()); // Draw current frame at (50, 50)
-            currentFrame.flip(true, false);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            isWalking = true;
+        } else {
+            isWalking = false;
+        }
+        if (left) {
+            if (isWalking) {
+                currentFrameWalking.flip(true, false);
+                game.batch.draw(currentFrameWalking, dino.x, dino.y, 0.5f * currentFrameWalking.getRegionWidth(), 0.5f * currentFrameWalking.getRegionHeight());
+                currentFrameWalking.flip(true, false);
+            } else {
+                currentFrame.flip(true, false);
+                game.batch.draw(currentFrame, dino.x, dino.y, 0.5f * currentFrame.getRegionWidth(), 0.5f * currentFrame.getRegionHeight());
+                currentFrame.flip(true, false);
+            }
 
-        } else if ((idle && right) || (right == false && left == false && idle)) {
-            game.batch.draw(currentFrame, 50, 20, 0.5f * currentFrame.getRegionWidth(), 0.5f * currentFrame.getRegionHeight()); // Draw current frame at (50, 50)
+        } else if ((right) || (right == false && left == false && idle)) {
+            if (isWalking) {
+                game.batch.draw(currentFrameWalking, dino.x, dino.y, 0.5f * currentFrameWalking.getRegionWidth(), 0.5f * currentFrameWalking.getRegionHeight());
+            } else {
+                game.batch.draw(currentFrame, dino.x, dino.y, 0.5f * currentFrame.getRegionWidth(), 0.5f * currentFrame.getRegionHeight());
+            }
 
         }
-        // game.batch.draw(AssetsLoader.region2, 0, 0);
-        // game.batch.draw(AssetsLoader.snakeHead, snakeHeadRectangle.x, snakeHeadRectangle.y);
-        // Get current frame of animation for the current stateTime
+
         game.batch.end();
-       /* if(currentFrame.isFlipX()){
-            currentFrame.flip(true,false);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            dino.x -= 200 * Gdx.graphics.getDeltaTime();
+            left = true;
+            right = false;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            dino.y -= 200 * Gdx.graphics.getDeltaTime();
+            
+        }
 
-        }*/
-        // currentFrame.flip(true,false);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            dino.x += 200 * Gdx.graphics.getDeltaTime();
+            left = false;
+            right = true;
 
-       /* if (death){
-            game.setScreen(new EndGameScreen(game));
-            dispose();
-        }*/
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            dino.y += 200 * Gdx.graphics.getDeltaTime();
+
+        }
+        if (!Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
+            idle = true;
+            isWalking = false;
+
+        } else {
+            idle = false;
+        }
+        //System.out.println(Gdx.input.isKeyPressed(Input.Keys.ANY_KEY));
+
+
+        if (dino.x < 0) {
+            dino.x = 0;
+
+        }
+        if (dino.x > 800 - 64) {
+            dino.x = 800 - 64;
+        }
+
         if (Gdx.input.justTouched() && death) {
             game.setScreen(new EndGameScreen(game));
             dispose();
