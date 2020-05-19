@@ -108,6 +108,9 @@ public class GameScreen implements Screen {
             }
 
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.N)) {
+            death = true;
+        }
         for (Rectangle rock : rocks) {
             game.batch.draw(AssetsLoader.rock, rock.x, rock.y,20,20);
         }
@@ -182,6 +185,10 @@ public class GameScreen implements Screen {
             game.setScreen(new EndGameScreen(game));
             dispose();
         }
+        if (death) {
+            game.setScreen(new EndGameScreen(game));
+            //dispose();
+        }
         if (TimeUtils.nanoTime() - lastRockTime > 1000000000){
             spawnRocksThrow();
 
@@ -234,6 +241,6 @@ public class GameScreen implements Screen {
         AssetsLoader.startGame.dispose();
         AssetsLoader.atlas.dispose();
         AssetsLoader.ideSheet.dispose();
-        AssetsLoader.rock.dispose();
+       AssetsLoader.rock.dispose();
     }
 }
