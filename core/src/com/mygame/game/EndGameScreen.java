@@ -15,7 +15,7 @@ public class EndGameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         AssetsLoader.loadEndAssets();
-        AssetsLoader.gameMusic.dispose();
+       // AssetsLoader.gameMusic.dispose();
 
     }
 

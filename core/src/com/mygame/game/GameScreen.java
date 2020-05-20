@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 public class GameScreen implements Screen {
     private Array<Rectangle> snake;
-    private Rectangle dino;
+    private Rectangle dino,rock;
     private MyGame game;
     private OrthographicCamera camera;
     private float stateTime;
@@ -37,14 +37,15 @@ public class GameScreen implements Screen {
         dino = new Rectangle();
         dino.x = 800 / 2 - 64 / 2;
         dino.y = 20;
-
+    dino.height=24;
+    dino.width=24;
         AssetsLoader.loadGameAssets();
         rocks = new Array<>();
         spawnRocksThrow();
         stateTime = 0f;
     }
     private void spawnRocksThrow() {
-        Rectangle rock = new Rectangle();
+        rock = new Rectangle();
         rock.x = MathUtils.random(0, 800 - 64);
         rock.y = 480;
         rock.width = 20;
@@ -187,7 +188,7 @@ public class GameScreen implements Screen {
         }
         if (death) {
             game.setScreen(new EndGameScreen(game));
-            //dispose();
+            dispose();
         }
         if (TimeUtils.nanoTime() - lastRockTime > 1000000000){
             spawnRocksThrow();
@@ -195,16 +196,16 @@ public class GameScreen implements Screen {
         }
         Iterator<Rectangle> iter = rocks.iterator();
         while (iter.hasNext()) {
-            Rectangle rock = iter.next();
-            rock.y -= 200 * Gdx.graphics.getDeltaTime();
+            Rectangle rock1 = iter.next();
+            rock1.y -= 200 * Gdx.graphics.getDeltaTime();
 
-            if (rock.y + 64 < 0) {
+            if (rock1.y + 64 < 0) {
 
                 iter.remove();
                 System.out.println("rock remove");
             }
-            if (rock.overlaps(dino)) {
-
+            if (rock1.overlaps(dino)) {
+death=true;
                System.out.println("Loser");
                 iter.remove();
 
@@ -240,7 +241,7 @@ public class GameScreen implements Screen {
         AssetsLoader.gameMusic.dispose();
         AssetsLoader.startGame.dispose();
         AssetsLoader.atlas.dispose();
-        AssetsLoader.ideSheet.dispose();
+//        AssetsLoader.ideSheet.dispose();
        AssetsLoader.rock.dispose();
     }
 }
